@@ -1,0 +1,528 @@
+/* 中國象棋棋盤樣式 */
+:root {
+  --board-bg-color: #e8c08d;
+  --grid-color: #8b4513;
+  --river-color: rgba(135, 206, 235, 0.1);
+  --palace-color: rgba(139, 69, 19, 0.1);
+  --red-piece-bg: radial-gradient(circle, #f9d5a7 0%, #e8a87c 100%);
+  --black-piece-bg: radial-gradient(circle, #636363 0%, #333333 100%);
+  --red-piece-color: #a93226;
+  --black-piece-color: #f5f5f5;
+  --selected-color: rgba(46, 204, 113, 0.7);
+  --valid-move-color: rgba(52, 152, 219, 0.5);
+  --check-color: rgba(231, 76, 60, 0.7);
+  --checking-piece-color: rgba(241, 196, 15, 0.7);
+}
+
+body {
+  font-family: 'Microsoft YaHei', 'SimHei', Arial, sans-serif;
+  background-color: #f5f5f5;
+  background-image: url('https://img.freepik.com/free-photo/wooden-background_24972-623.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 10px;
+}
+
+.game-status {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  padding: 8px 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.game-controls {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #8b4513;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #a0522d;
+}
+
+button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+select {
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  background-color: white;
+}
+
+#chessboard {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 9/10;
+  background-color: #e8c08d;
+  position: relative;
+  border: 10px solid #8b4513;
+  border-radius: 5px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+/* 棋盤背景紋理 */
+#chessboard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://img.freepik.com/free-photo/brown-wooden-textured-flooring-background_53876-128486.jpg');
+  background-size: cover;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+/* 棋盤中間河流文字 */
+#chessboard::after {
+  content: '楚河        漢界';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: rgba(139, 69, 19, 0.7);
+  z-index: 0;
+  letter-spacing: 1.5rem;
+  pointer-events: none;
+}
+
+/* 棋盤格子 */
+.cell {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.cell::before, .cell::after {
+  content: '';
+  position: absolute;
+  background-color: var(--grid-color);
+  z-index: 1;
+}
+
+.cell::before {
+  width: 100%;
+  height: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.cell::after {
+  width: 2px;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* 邊緣格子調整 */
+.cell[data-row="0"]::before, 
+.cell[data-row="9"]::before {
+  width: 50%;
+}
+
+.cell[data-col="0"]::after, 
+.cell[data-col="8"]::after {
+  height: 50%;
+}
+
+/* 河流區域 */
+.river {
+  background-color: var(--river-color);
+}
+
+/* 九宮區域 */
+.palace {
+  background-color: var(--palace-color);
+}
+
+/* 九宮斜線 */
+.palace[data-row="0"][data-col="3"]::before,
+.palace[data-row="2"][data-col="5"]::before,
+.palace[data-row="7"][data-col="3"]::before,
+.palace[data-row="9"][data-col="5"]::before {
+  content: '';
+  position: absolute;
+  width: 141%; /* √2 * 100% */
+  height: 2px;
+  background-color: var(--grid-color);
+  transform: rotate(45deg);
+  z-index: 1;
+}
+
+.palace[data-row="0"][data-col="5"]::before,
+.palace[data-row="2"][data-col="3"]::before,
+.palace[data-row="7"][data-col="5"]::before,
+.palace[data-row="9"][data-col="3"]::before {
+  content: '';
+  position: absolute;
+  width: 141%; /* √2 * 100% */
+  height: 2px;
+  background-color: var(--grid-color);
+  transform: rotate(-45deg);
+  z-index: 1;
+}
+
+/* 棋盤點位標記 */
+.dot-marker {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: var(--grid-color);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* 棋子樣式 */
+.piece {
+  width: 85%;
+  height: 85%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid #8b4513;
+  position: relative;
+}
+
+/* 棋子邊緣效果 */
+.piece::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.piece:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.red-piece {
+  background: var(--red-piece-bg);
+  color: var(--red-piece-color);
+}
+
+.black-piece {
+  background: var(--black-piece-bg);
+  color: var(--black-piece-color);
+}
+
+/* 選中的棋子 */
+.selected {
+  box-shadow: 0 0 0 4px var(--selected-color), 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 有效移動位置 */
+.valid-move::before {
+  content: '';
+  position: absolute;
+  width: 40%;
+  height: 40%;
+  background-color: var(--valid-move-color);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* 被將軍的將/帥 */
+.in-check {
+  box-shadow: 0 0 0 4px var(--check-color), 0 4px 8px rgba(0, 0, 0, 0.3);
+  animation: pulse 1s infinite alternate;
+}
+
+/* 導致將軍的棋子 */
+.checking-piece {
+  box-shadow: 0 0 0 4px var(--checking-piece-color), 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 移動動畫 */
+.move-animation {
+  animation: moveHighlight 1s;
+}
+
+/* 勝利動畫 */
+.victory-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0) 70%);
+  animation: victoryPulse 2s infinite;
+}
+
+/* AI思考中提示 */
+.thinking {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px 30px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  z-index: 100;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  animation: pulse 1s infinite alternate;
+}
+
+/* 動畫關鍵幀 */
+@keyframes pulse {
+  from {
+    transform: scale(1);
+    box-shadow: 0 0 0 4px var(--check-color), 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  to {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 6px var(--check-color), 0 6px 12px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@keyframes moveHighlight {
+  0% {
+    box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.7), 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(46, 204, 113, 0.3), 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes victoryPulse {
+  0% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  #chessboard {
+    max-width: 90vw;
+  }
+  
+  .piece {
+    font-size: 1.2rem;
+  }
+  
+  .game-info {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .game-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  #chessboard::after {
+    font-size: 1.4rem;
+    letter-spacing: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .piece {
+    font-size: 1rem;
+  }
+  
+  button, select {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+  
+  .game-status {
+    font-size: 1rem;
+  }
+  
+  #chessboard::after {
+    font-size: 1.2rem;
+    letter-spacing: 0.5rem;
+  }
+}
+
+/* 遊戲結束時的遮罩 */
+.game-over-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+
+.game-over-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.game-over-message {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  max-width: 80%;
+}
+
+.game-over-message h2 {
+  margin-top: 0;
+  color: #8b4513;
+}
+
+.game-over-message button {
+  margin-top: 20px;
+}
+
+/* 棋子移動路徑提示 */
+.move-path {
+  position: absolute;
+  background-color: rgba(46, 204, 113, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 思考中動畫 */
+.thinking::after {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  animation: thinkingDots 1.5s infinite;
+}
+
+@keyframes thinkingDots {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+  100% { content: ''; }
+}
+
+/* 棋子翻轉效果，用於悔棋動畫 */
+.flip-animation {
+  animation: flip 0.5s;
+}
+
+@keyframes flip {
+  0% { transform: rotateY(0deg); }
+  50% { transform: rotateY(90deg); }
+  100% { transform: rotateY(0deg); }
+}
+
+/* 工具提示樣式 */
+.tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  pointer-events: none;
+  z-index: 100;
+  white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.tooltip.visible {
+  opacity: 1;
+}
+
+/* 調試模式樣式 */
+.debug-info {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  max-width: 300px;
+  max-height: 200px;
+  overflow: auto;
+  z-index: 100;
+}

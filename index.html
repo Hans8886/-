@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中國象棋</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', '微軟雅黑', Arial, sans-serif;
+            background: #f5f5f5 url('https://img.freepik.com/free-photo/chinese-ink-painting-background_53876-129570.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <link rel="stylesheet" href="notation-styles.css">
+    <link rel="stylesheet" href="game-ui.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 線上連線對戰入口 -->
+    <div id="online-entry" style="background:rgba(255,255,255,0.95);border-radius:12px;padding:32px 24px;box-shadow:0 4px 16px #0002;max-width:350px;margin:40px auto 24px;">
+        <h2 style="margin-top:0">線上對戰/觀戰</h2>
+        <div style="margin-bottom:10px;">
+            <input id="room-id" type="text" placeholder="房號 (可自訂)" style="width:100%;padding:8px;margin-bottom:8px;">
+            <input id="player-name" type="text" placeholder="暱稱" style="width:100%;padding:8px;">
+        </div>
+        <button id="join-btn" style="width:48%;padding:8px 0;margin-right:2%">加入對戰</button>
+        <button id="spectate-btn" style="width:48%;padding:8px 0;">觀戰</button>
+        <div id="online-status" style="margin-top:12px;color:#b00;font-size:0.95em;"></div>
+    </div>
+    <!-- 遊戲界面由JavaScript動態生成 -->
+    
+    <!-- socket.io 客戶端 -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <!-- 先載入音效管理器 -->
+    <script src="sounds.js"></script>
+    <!-- 再載入棋盤初始化 -->
+    <script src="initializeBoard.js"></script>
+    <!-- 棋譜管理器 -->
+    <script src="notation.js"></script>
+    <!-- 回放模式管理器 -->
+    <script src="replay-mode.js"></script>
+    <!-- AI難度管理器 -->
+    <script src="ai-difficulty.js"></script>
+    <!-- 遊戲界面管理器 - 僅載入新版 -->
+    <script src="game-ui-updated.js"></script>
+    <!-- 最後載入主要遊戲邏輯 -->
+    <script src="chess.js"></script>
+    <!-- 線上對戰同步邏輯 -->
+    <script src="../online-chess.js"></script>
+</body>
+</html>

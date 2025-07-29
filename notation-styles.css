@@ -1,0 +1,152 @@
+/* 棋譜記錄相關樣式 */
+.game-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%;
+  max-width: 1000px;
+}
+
+#chessboard {
+  flex: 0 0 auto;
+}
+
+.notation-panel {
+  flex: 1 1 300px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  max-height: 600px;
+}
+
+.notation-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.notation-header h3 {
+  margin: 0;
+  color: #8b4513;
+  font-size: 1.2rem;
+}
+
+.notation-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.notation-controls button {
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  flex: 1;
+  min-width: 80px;
+}
+
+.notation-list {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.notation-move {
+  display: flex;
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.notation-move:hover {
+  background-color: #f5f5f5;
+}
+
+.notation-move.current {
+  background-color: rgba(46, 204, 113, 0.2);
+  font-weight: bold;
+}
+
+.notation-move.replaying {
+  background-color: rgba(52, 152, 219, 0.2);
+}
+
+.move-number {
+  flex: 0 0 40px;
+  font-weight: bold;
+  color: #8b4513;
+}
+
+.move-text {
+  flex: 1;
+}
+
+.move-player {
+  flex: 0 0 50px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.move-player.red {
+  color: #a93226;
+}
+
+.move-player.black {
+  color: #333;
+}
+
+.notation-export {
+  margin-top: 15px;
+  text-align: right;
+}
+
+/* 回放時的棋盤覆蓋層 */
+.replay-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  z-index: 5;
+  display: none;
+}
+
+.replay-overlay.active {
+  display: block;
+}
+
+.replay-message {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+/* 響應式設計 */
+@media (max-width: 900px) {
+  .game-layout {
+    flex-direction: column;
+  }
+  
+  .notation-panel {
+    height: 300px;
+    max-height: 300px;
+  }
+}
